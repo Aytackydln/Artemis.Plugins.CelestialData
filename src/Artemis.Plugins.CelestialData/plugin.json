@@ -1,0 +1,15 @@
+{
+    "Guid": "9DFB9DD0-C763-465D-8BEA-8DB244822DBD",
+    "Name": "Plugin Name",
+    "Description": "Plugin Description",
+    "Author": "",
+    "Website": "",
+    "Repository": "",
+    "Icon": "QuestionMark",
+    "Version": "1.0.0.0",
+    "Main": "Artemis.Plugins.CelestialData.dll",
+    "AutoEnableProperties": true,
+    "RequiresAdmin": false,
+    "Platforms": "Windows,Linux,OSX",
+    "Api": "1.0.0"
+}
