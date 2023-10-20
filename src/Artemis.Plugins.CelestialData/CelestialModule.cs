@@ -2,15 +2,17 @@
 using Artemis.Core;
 using Artemis.Core.Modules;
 using Artemis.Plugins.CelestialData.IpApi;
+using JetBrains.Annotations;
 
 namespace Artemis.Plugins.CelestialData;
 
 [PluginFeature(Name = "Celestial Data")]
+[UsedImplicitly]
 public class CelestialModule : Module<CelestialDataModel>
 {
-    public static double Lat = -1;
-    public static double Lon = -1;
-    
+    public static double Lat { get; private set; } = -1;
+    public static double Lon { get; private set; } = -1;
+
     private readonly PluginSettings _pluginSettings;
 
     public CelestialModule(PluginSettings pluginSettings)
@@ -22,7 +24,7 @@ public class CelestialModule : Module<CelestialDataModel>
     {
         var lat = _pluginSettings.GetSetting("lat", -1d);
         var lon = _pluginSettings.GetSetting("lon", -1d);
-        
+
         if (lat.Value <= 0)
         {
             var ipData = IpApiClient.GetIpData().Result;
@@ -35,11 +37,8 @@ public class CelestialModule : Module<CelestialDataModel>
             lat.Save();
             lon.Save();
         }
-        else
-        {
-            Lat = lat.Value;
-            Lon = lon.Value;
-        }
+        Lat = lat.Value;
+        Lon = lon.Value;
     }
 
     public override void Disable()

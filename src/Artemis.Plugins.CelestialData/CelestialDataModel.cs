@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Artemis.Core.Modules;
 using CoordinateSharp;
 
@@ -15,23 +16,29 @@ public class CelestialDataModel : DataModel
     public double SolarNoonPercentage
     {
         get {
-            var d = DateTime.Now;
+            var dateTime = DateTime.Now;
 
-            if (d.Hour == _currentHour) return _currentHourValues[d.Minute];
-    
-            _currentHour = d.Hour;
-            _currentHourValues = new Dictionary<int, double>();
-
-            d = d.AddMinutes(-d.Minute);
-            for (var i = 0; i < 60; i++)
+            if (dateTime.Hour != _currentHour)
             {
-                var c = new Coordinate(CelestialModule.Lat, CelestialModule.Lon, d);
-                var b = c.CelestialInfo.SunAltitude * 100d / 90;
-                _currentHourValues[i] = Math.Clamp(b, 0d, 100d);
-                d = d.AddMinutes(1);
+                _currentHour = dateTime.Hour;
+                GenerateHourData(dateTime);
             }
 
-            return _currentHourValues[d.Minute];
+            return _currentHourValues[dateTime.Minute];
+        }
+    }
+
+    private void GenerateHourData(DateTime date)
+    {
+        _currentHourValues = new Dictionary<int, double>();
+        
+        date = date.AddMinutes(-date.Minute);
+        for (var i = 0; i < 60; i++)
+        {
+            var coordinate = new Coordinate(CelestialModule.Lat, CelestialModule.Lon, date);
+            var noonPercentage = coordinate.CelestialInfo.SunAltitude * 100d / 90;
+            _currentHourValues[i] = Math.Clamp(noonPercentage, 0d, 100d);
+            date = date.AddMinutes(1);
         }
     }
 }
