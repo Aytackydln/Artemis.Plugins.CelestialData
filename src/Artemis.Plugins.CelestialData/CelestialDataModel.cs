@@ -31,13 +31,12 @@ public class CelestialDataModel : DataModel
 
     private void GenerateHourData(DateTime date)
     {
-
         _currentHourValues = new Dictionary<int, double>();
 
         date = date.AddMinutes(-date.Minute);
         for (var i = 0; i < 60; i++)
         {
-            var coordinate = new Coordinate(52.4928, 13.4039, date);
+            var coordinate = new Coordinate(CelestialModule.Lat, CelestialModule.Lon, date);
             var noonPercentage = BrightnessFunction(coordinate.CelestialInfo.SunAltitude);
             _currentHourValues[i] = Math.Clamp(noonPercentage, 0d, 100d);
             date = date.AddMinutes(1);
