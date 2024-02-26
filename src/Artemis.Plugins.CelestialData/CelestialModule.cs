@@ -1,29 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Artemis.Core;
 using Artemis.Core.Modules;
 using Artemis.Plugins.CelestialData.IpApi;
+using CoordinateSharp;
 using JetBrains.Annotations;
 
 namespace Artemis.Plugins.CelestialData;
 
 [PluginFeature(Name = "Celestial Data")]
 [UsedImplicitly]
-public class CelestialModule : Module<CelestialDataModel>
+public class CelestialModule(PluginSettings pluginSettings) : Module<CelestialDataModel>
 {
-    public static double Lat { get; private set; } = -1;
-    public static double Lon { get; private set; } = -1;
+    private static double Lat { get; set; } = -1;
+    private static double Lon { get; set; } = -1;
 
-    private readonly PluginSettings _pluginSettings;
-
-    public CelestialModule(PluginSettings pluginSettings)
+    private static readonly EagerLoad El = new(EagerLoadType.Celestial)
     {
-        _pluginSettings = pluginSettings;
-    }
+        Extensions = new EagerLoad_Extensions(EagerLoad_ExtensionsType.Solar_Cycle)
+    };
+    public static Coordinate Coordinate { get; private set; } = new(El);
 
     public override void Enable()
     {
-        var lat = _pluginSettings.GetSetting("lat", -1d);
-        var lon = _pluginSettings.GetSetting("lon", -1d);
+        var lat = pluginSettings.GetSetting("lat", -1d);
+        var lon = pluginSettings.GetSetting("lon", -1d);
 
         if (lat.Value <= 0)
         {
@@ -39,6 +40,8 @@ public class CelestialModule : Module<CelestialDataModel>
         }
         Lat = lat.Value;
         Lon = lon.Value;
+
+        Coordinate = new Coordinate(Lat, Lon, DateTime.Now, El);
     }
 
     public override void Disable()

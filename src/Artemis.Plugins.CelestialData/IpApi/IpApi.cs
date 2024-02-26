@@ -10,7 +10,7 @@ public static class IpApiClient
     public static async Task<IpData?> GetIpData()
     {
         using HttpClient client = new();
-        var response = await client.GetFromJsonAsync<IpData>("http://ip-api.com/json?fields=status,message,lat,lon");
+        var response = await client.GetFromJsonAsync("http://ip-api.com/json?fields=status,message,lat,lon", IpApiSourceGenerationContext.Default.IpData);
 
         if (response == null)
         {
