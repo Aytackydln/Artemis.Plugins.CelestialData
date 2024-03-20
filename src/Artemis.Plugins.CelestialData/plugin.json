@@ -6,7 +6,7 @@
     "Website": "",
     "Repository": "https://github.com/Aytackydln/Artemis.Plugins.CelestialData",
     "Icon": "SunCompass",
-    "Version": "0.1.3.0",
+    "Version": "0.1.4.0",
     "Main": "Artemis.Plugins.CelestialData.dll",
     "AutoEnableProperties": true,
     "RequiresAdmin": false,
